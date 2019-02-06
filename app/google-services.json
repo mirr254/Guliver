@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "15528177616",
+    "firebase_url": "https://guliver-b07df.firebaseio.com",
+    "project_id": "guliver-b07df",
+    "storage_bucket": "guliver-b07df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:15528177616:android:56dbdff386ae3205",
+        "android_client_info": {
+          "package_name": "com.guliver.shammir.guliver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "15528177616-lpstiteut5m2g605g3petg87d3uhtgkj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.guliver.shammir.guliver",
+            "certificate_hash": "fa6b9ae9b84fe0e543b982afb7e32bb7350b0784"
+          }
+        },
+        {
+          "client_id": "15528177616-522cp6024le9tc3qrok6tafloc59hgm9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.guliver.shammir.guliver",
+            "certificate_hash": "4212b34e8a821d23ec002cd75b63431e6c448c6c"
+          }
+        },
+        {
+          "client_id": "15528177616-6rb1fk4tos4r5l8fl9sudjss9p1eeqps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAswtuOZRJLKY08sJ8jmc60ixTP3xkK1hc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "15528177616-6rb1fk4tos4r5l8fl9sudjss9p1eeqps.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
