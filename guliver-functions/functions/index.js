@@ -19,23 +19,35 @@ const mailTranspot = nodemailer.createTransport({
 });
 
 //send email when user requests a ride
-exports.sendEmailToGuliver = functions.database.ref('/customerRequest').onWrite(async (change) =>{
-    const snapshot = change.after();
-    const dataVal = snapshot.val();
+exports.sendEmailToGuliver = functions.database.ref('/customerRequest')
+    .onCreate( (change, context) => {
 
-    console.log("Data is ", dataVal);
-
-    /*
+    //get the userID
+    const userId = context.auth.uid;
+    console.log("UserId is ", userId);
+     /*
     get the request details to send together with the email
     Users/Customers/uid/
                         -phone
                         - name
     */
-
-
-
-    const mailOptions = {
-        from: '"Guliver" <guliverdev@gmail.com>',
-        to: 'kungusamuel90@gmail.com'
+   const mailOptions = {
+    from: '"Guliver" <guliverdev@gmail.com>',
+    to: 'kungusamuel90@gmail.com'
     };
-});
+
+    return admin.database().ref('/Users/Customers/' + userId ).once("value")
+      .then( snapshot => {
+          var username;
+          const phoneNumber = snapshot.val().phone;
+
+          username ? snapshot.val().name !== null : "no name yet";
+
+          //send email here
+
+          return console.log("PhoneNumber: ", phoneNumber);
+      }).catch( err => {
+          return console.log("Error", err)
+      });
+
+   });
