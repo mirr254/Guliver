@@ -25,16 +25,7 @@ exports.sendEmailToGuliver = functions.database.ref('/customerRequest')
     //get the userID
     const userId = context.auth.uid;
     console.log("UserId is ", userId);
-     /*
-    get the request details to send together with the email
-    Users/Customers/uid/
-                        -phone
-                        - name
-    */
-   const mailOptions = {
-    from: '"Guliver" <guliverdev@gmail.com>',
-    to: 'kungusamuel90@gmail.com'
-    };
+
 
     return admin.database().ref('/Users/Customers/' + userId ).once("value")
       .then( snapshot => {
@@ -44,10 +35,30 @@ exports.sendEmailToGuliver = functions.database.ref('/customerRequest')
           username ? snapshot.val().name !== null : "no name yet";
 
           //send email here
+               /*
+            get the request details to send together with the email
+            Users/Customers/uid/
+                                -phone
+                                - name
+            */
+            const mailOptions = {
+                from: '"Gulivery" <guliverdev@gmail.com>',
+                to: 'kungusamuel90@gmail.com'
+                };
+
+                mailOptions.subject = "Ride request";
+                mailOptions.text = "A ride request has been made by " +username+ " with phone number "+phoneNumber+ " ;"
+
+            try{
+                await mailTranspot.sendMail(mailOptions);
+                console.log("Email sent")
+            } catch(error){
+                console.error("There was an error sending the message", error);
+            }
 
           return console.log("PhoneNumber: ", phoneNumber);
       }).catch( err => {
-          return console.log("Error", err)
+          return console.log("Error", err);
       });
 
    });
