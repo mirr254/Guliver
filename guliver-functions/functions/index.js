@@ -9,9 +9,9 @@ admin.initializeApp( functions.config().firebase ); //initialize admin app insta
 //configure the email transport using default smtp transport and gmail account
 const gmailEmail = functions.config().gmail.email;
 const gmailPassword = functions.config().gmail.password;
-const mailTranspot = nodemailer.createTransport({
+const mailTransport = nodemailer.createTransport({
 
-    service: 'gmail',
+    service: 'Gmail',
     auth: {
         user: gmailEmail,
         pass: gmailPassword,
@@ -20,7 +20,7 @@ const mailTranspot = nodemailer.createTransport({
 
 //send email when user requests a ride
 exports.sendEmailToGuliver = functions.database.ref('/customerRequest')
-    .onCreate( (change, context) => {
+    .onCreate( async (change, context) => {
 
     //get the userID
     const userId = context.auth.uid;
@@ -50,7 +50,7 @@ exports.sendEmailToGuliver = functions.database.ref('/customerRequest')
                 mailOptions.text = "A ride request has been made by " +username+ " with phone number "+phoneNumber+ " ;"
 
             try{
-                await mailTranspot.sendMail(mailOptions);
+                mailTransport.sendMail(mailOptions);
                 console.log("Email sent")
             } catch(error){
                 console.error("There was an error sending the message", error);
