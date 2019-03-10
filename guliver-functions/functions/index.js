@@ -9,6 +9,7 @@ admin.initializeApp( functions.config().firebase ); //initialize admin app insta
 //configure the email transport using default smtp transport and gmail account
 const gmailEmail = functions.config().gmail.email;
 const gmailPassword = functions.config().gmail.password;
+
 const mailTransport = nodemailer.createTransport({
 
     service: 'Gmail',
@@ -17,6 +18,7 @@ const mailTransport = nodemailer.createTransport({
         pass: gmailPassword,
     },
 });
+console.log("created mailTransport");
 
 //send email when user requests a ride
 exports.sendEmailToGuliver = functions.database.ref('/customerRequest')
