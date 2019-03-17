@@ -1,11 +1,16 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="@style/Theme.MaterialComponents.Light.DarkActionBar" >
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textAppearanceButton">@style/TextAppearance.AppCompat.Button.Custom</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Button.Custom">
+        <item name="android:textColor">@color/call_button_color</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -57,7 +62,7 @@
 
     <!--Style for Splash Screen-->
     <style name="SplashScreenTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:windowBackground">@drawable/splash_screen_drawable</item>
+        <item name="android:windowBackground">@drawable/guliver_go_logo</item>
     </style>
 
     <!--for the toolbar-->

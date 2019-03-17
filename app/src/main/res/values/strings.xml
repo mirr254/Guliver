@@ -87,5 +87,10 @@
     <string name="cheap"> Cheap</string>
     <string name="title_activity_customer_number_verification">CustomerNumberVerificationActivity
     </string>
+
+    <string name="resend">Resend</string>
+
+    <!--customer numnber verificatio-->
     <string name="confirmation_string">Confirm</string>
+    <string name="todo">image description</string>
 </resources>
