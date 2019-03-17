@@ -85,7 +85,7 @@
     <string name="convinient">Convinient</string>
     <string name="safe">Safe</string>
     <string name="cheap"> Cheap</string>
-    <string name="title_activity_customer_number_verification">CustomerNumberVerificationActivity
+    <string name="title_activity_customer_number_verification">Verify Number
     </string>
 
     <string name="resend">Resend</string>
@@ -93,4 +93,8 @@
     <!--customer numnber verificatio-->
     <string name="confirmation_string">Confirm</string>
     <string name="todo">image description</string>
+    <string name="number_hint">+254700092923</string>
+    <string name="confirmation_log_in">Success</string>
+    <string name="logo">our logo</string>
+    <string name="confirmation_code">Code</string>
 </resources>

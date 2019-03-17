@@ -49,7 +49,6 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
     private static final String KEY_VERIFY_IN_PROGRESS = "key_verify_in_progress";
 
     private static final int STATE_INITIALIZED = 1;
-    private static final int STATE_CODE_SENT = 2;
     private static final int STATE_VERIFY_FAILED = 3;
     private static final int STATE_VERIFY_SUCCESS = 4;
     private static final int STATE_SIGNIN_FAILED = 5;
@@ -63,6 +62,7 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
 
     private boolean mVerificationInProgress = false;
     private String mVerificationId;
+    private String mPhoneNumber;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
@@ -70,16 +70,11 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
     private ViewGroup mSignedInViews;
 
     private TextView mStatusText;
-    private TextView mDetailText;
 
-    private EditText mPhoneNumberField;
     private EditText mVerificationField;
 
-    private Button mStartButton;
     private Button mVerifyButton;
     private Button mResendButton;
-    private Button mSignOutButton;
-    private Button mCallButton;
 
     ProgressBar progressBar;
 
@@ -87,40 +82,33 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_number_verification);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         if (savedInstanceState != null) {
             onRestoreInstanceState(savedInstanceState);
         }
 
+//        collect data from intent
+        Intent verificationIntent = getIntent();
+        mPhoneNumber = verificationIntent.getStringExtra("PHONE_NUMBER");
+        mVerificationId = verificationIntent.getStringExtra("VERIFICATION_ID");
+        mResendToken = (PhoneAuthProvider.ForceResendingToken) verificationIntent.getSerializableExtra("SERIALIZED_RESEND_TOKEN");
+
         progressBar = (ProgressBar) findViewById(R.id.customer_number_progress_bar);
 
-        // Assign views
-        mPhoneNumberViews = (ViewGroup) findViewById(R.id.phone_auth_fields);
-        mSignedInViews = (ViewGroup) findViewById(R.id.signed_in_buttons);
+        mStatusText = (TextView) findViewById(R.id.confirmation_status);
 
-        mStatusText = (TextView) findViewById(R.id.status);
-        mDetailText = (TextView) findViewById(R.id.detail);
-
-      //  mPhoneNumberField = (EditText) findViewById(R.id.field_phone_number);
 
         mVerificationField = (EditText) findViewById(R.id.customer_verification_edit_text);
 
         mVerifyButton = (Button) findViewById(R.id.confirmation_button);
         mResendButton = (Button) findViewById(R.id.resend_button);
-        mSignOutButton = (Button) findViewById(R.id.sign_out_button);
 
 
-       // mCallButton = (Button) findViewById(R.id.customer_call_office_button);
-        //mStartButton = (Button) findViewById(R.id.button_start_verification);
-
-        // Assign click listeners
-        mStartButton.setOnClickListener(this);
         mVerifyButton.setOnClickListener(this);
         mResendButton.setOnClickListener(this);
-        mSignOutButton.setOnClickListener(this);
-        mCallButton.setOnClickListener(this);
+
 
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
@@ -145,7 +133,7 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
 
                 // [START_EXCLUDE silent]
                 // Update the UI and attempt sign in with the phone credential
-                updateUI(STATE_VERIFY_SUCCESS, credential);
+               // updateUI(STATE_VERIFY_SUCCESS, credential);
                 // [END_EXCLUDE]
                 signInWithPhoneAuthCredential(credential);
             }
@@ -159,18 +147,13 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
                 mVerificationInProgress = false;
                 // [END_EXCLUDE]
 
-                if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    // Invalid request
-                    // [START_EXCLUDE]
-                    mPhoneNumberField.setError("Invalid phone number.");
-                    // [END_EXCLUDE]
-                } else if (e instanceof FirebaseTooManyRequestsException) {
+               if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
                     // [START_EXCLUDE]
                     Snackbar.make(findViewById(android.R.id.content), "Quota exceeded.",
                             Snackbar.LENGTH_SHORT).show();
                     // [END_EXCLUDE]
-                }
+                 }
 
                 // Show a message and update the UI
                 // [START_EXCLUDE]
@@ -178,23 +161,6 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
                 // [END_EXCLUDE]
             }
 
-            @Override
-            public void onCodeSent(String verificationId,
-                                   PhoneAuthProvider.ForceResendingToken token) {
-                // The SMS verification code has been sent to the provided phone number, we
-                // now need to ask the user to enter the code and then construct a credential
-                // by combining the code with a verification ID.
-                Log.d(TAG, "onCodeSent:" + verificationId);
-
-                // Save verification ID and resending token so we can use them later
-                mVerificationId = verificationId;
-                mResendToken = token;
-
-                // [START_EXCLUDE]
-                // Update UI
-                updateUI(STATE_CODE_SENT);
-                // [END_EXCLUDE]
-            }
         };
         // [END phone_auth_callbacks]
     }
@@ -208,8 +174,8 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
         updateUI(currentUser);
 
         // [START_EXCLUDE]
-        if (mVerificationInProgress && validatePhoneNumber()) {
-            startPhoneNumberVerification(mPhoneNumberField.getText().toString());
+        if (mVerificationInProgress) {
+            startPhoneNumberVerification(mPhoneNumber);
         }
         // [END_EXCLUDE]
     }
@@ -280,8 +246,8 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     Log.e(TAG, "Registration Phone "+ dataSnapshot.getValue());
-                                    if (dataSnapshot.getValue() != mPhoneNumberField.getText().toString()){
-                                        current_user_db.setValue(mPhoneNumberField.getText().toString());
+                                    if (dataSnapshot.getValue() != mPhoneNumber){
+                                        current_user_db.setValue(mPhoneNumber);
                                     }
                                 }
 
@@ -314,10 +280,6 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
     }
     // [END sign_in_with_phone]
 
-    private void signOut() {
-        mAuth.signOut();
-        updateUI(STATE_INITIALIZED);
-    }
 
     private void updateUI(int uiState) {
         updateUI(uiState, mAuth.getCurrentUser(), null);
@@ -341,33 +303,20 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
 
     private void updateUI(int uiState, FirebaseUser user, PhoneAuthCredential cred) {
         switch (uiState) {
-            case STATE_INITIALIZED:
-                // Initialized state, show only the phone number field and start button
-                enableViews(mStartButton, mPhoneNumberField);
-                disableViews(mVerifyButton, mResendButton, mVerificationField);
-                mDetailText.setText(null);
-                break;
-            case STATE_CODE_SENT:
-                // Code sent state, show the verification field, the
-                enableViews(mVerifyButton, mResendButton, mPhoneNumberField, mVerificationField);
-                disableViews(mStartButton);
-                mDetailText.setText(R.string.status_code_sent);
-                mDetailText.setTextColor(Color.parseColor("#43a047"));
-                break;
             case STATE_VERIFY_FAILED:
                 // Verification has failed, show all options
-                enableViews(mStartButton, mVerifyButton, mResendButton, mPhoneNumberField,
+                enableViews( mVerifyButton, mResendButton,
                         mVerificationField);
-                mDetailText.setText(R.string.status_verification_failed);
-                mDetailText.setTextColor(Color.parseColor("#dd2c00"));
+                mStatusText.setText(R.string.status_verification_failed);
+                mStatusText.setTextColor(Color.parseColor("#dd2c00"));
                 progressBar.setVisibility(View.INVISIBLE);
                 break;
             case STATE_VERIFY_SUCCESS:
                 // Verification has succeeded, proceed to firebase sign in
-                disableViews(mStartButton, mVerifyButton, mResendButton, mPhoneNumberField,
+                disableViews( mVerifyButton, mResendButton,
                         mVerificationField);
-                mDetailText.setText("Verfication Sucessfull");
-                mDetailText.setTextColor(Color.parseColor("#43a047"));
+                mStatusText.setText("Verfication Sucessfull");
+                mStatusText.setTextColor(Color.parseColor("#43a047"));
                 progressBar.setVisibility(View.INVISIBLE);
 
                 // Set the verification text based on the credential
@@ -383,8 +332,8 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
                 break;
             case STATE_SIGNIN_FAILED:
                 // No-op, handled by sign-in check
-                mDetailText.setText(R.string.status_sign_in_failed);
-                mDetailText.setTextColor(Color.parseColor("#dd2c00"));
+                mStatusText.setText(R.string.status_sign_in_failed);
+                mStatusText.setTextColor(Color.parseColor("#dd2c00"));
                 progressBar.setVisibility(View.INVISIBLE);
                 break;
             case STATE_SIGNIN_SUCCESS:
@@ -393,15 +342,7 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
                 break;
         }
 
-        if (user == null) {
-            // Signed out
-            mPhoneNumberViews.setVisibility(View.VISIBLE);
-            mSignedInViews.setVisibility(View.GONE);
-
-            mStatusText.setText(R.string.signed_out);;
-        } else {
-            // Signed in
-            mPhoneNumberViews.setVisibility(View.GONE);
+        if (user != null) {
             /*
             mSignedInViews.setVisibility(View.VISIBLE);
             enableViews(mPhoneNumberField, mVerificationField);
@@ -413,20 +354,9 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
             Intent intent = new Intent(this, CustomerMapActivity.class);
             startActivity(intent);
             finish();
-
         }
     }
 
-    private boolean validatePhoneNumber() {
-        String phoneNumber = mPhoneNumberField.getText().toString();
-        if (TextUtils.isEmpty(phoneNumber)) {
-            mPhoneNumberField.setError("Invalid phone number.");
-            mPhoneNumberField.setTextColor(Color.parseColor("#ff1744"));
-            return false;
-        }
-
-        return true;
-    }
 
     private void enableViews(View... views) {
         for (View v : views) {
@@ -444,25 +374,6 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.button_start_verification:
-                if (!validatePhoneNumber()) {
-                    return;
-                }
-
-                ///////hide keyboard start
-                InputMethodManager inputManager = (InputMethodManager)
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
-
-                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-                        InputMethodManager.HIDE_NOT_ALWAYS);
-                /////////hide keyboard end
-
-
-                //mStatusText.setText("Authenticating....!");
-                progressBar.setVisibility(View.VISIBLE);
-                startPhoneNumberVerification(mPhoneNumberField.getText().toString());
-
-                break;
             case R.id.button_verify_phone:
                 String code = mVerificationField.getText().toString();
                 if (TextUtils.isEmpty(code)) {
@@ -473,11 +384,9 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
                 verifyPhoneNumberWithCode(mVerificationId, code);
                 break;
             case R.id.button_resend:
-                resendVerificationCode(mPhoneNumberField.getText().toString(), mResendToken);
+                resendVerificationCode(mPhoneNumber, mResendToken);
                 break;
-            case R.id.sign_out_button:
-                signOut();
-                break;
+
         }
     }
 

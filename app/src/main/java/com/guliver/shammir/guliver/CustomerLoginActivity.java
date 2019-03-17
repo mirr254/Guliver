@@ -23,15 +23,20 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
-public class CustomerLoginActivity  extends AppCompatActivity implements View.OnClickListener {
+public class CustomerLoginActivity  extends AppCompatActivity implements View.OnClickListener, Serializable {
 
     private static final String TAG = "CustomerLoginActivity";
+
+    private static final String KEY_VERIFY_IN_PROGRESS = "key_verify_in_progress";
+    private String mVerificationId;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
     // [END declare_auth]
+    private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private boolean mVerificationInProgress = false;
 
@@ -84,7 +89,7 @@ public class CustomerLoginActivity  extends AppCompatActivity implements View.On
 //                updateUI(STATE_VERIFY_SUCCESS, credential);
                 // [END_EXCLUDE]
                 enableViews(login_button);
-                goToConfirmationPage( Integer.parseInt(customer_phone.getText().toString()) );
+
 
             }
 
@@ -99,6 +104,7 @@ public class CustomerLoginActivity  extends AppCompatActivity implements View.On
 
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
+
                     // [START_EXCLUDE]
                     customer_phone.setError("Invalid phone number.");
                     // [END_EXCLUDE]
@@ -116,6 +122,25 @@ public class CustomerLoginActivity  extends AppCompatActivity implements View.On
 //                updateUI(STATE_VERIFY_FAILED);
                 // [END_EXCLUDE]
 
+            }
+
+            @Override
+            public void onCodeSent(String verificationId,
+                                   PhoneAuthProvider.ForceResendingToken token) {
+                // The SMS verification code has been sent to the provided phone number, we
+                // now need to ask the user to enter the code and then construct a credential
+                // by combining the code with a verification ID.
+                Log.d(TAG, "onCodeSent:" + verificationId);
+
+                // Save verification ID and resending token so we can use them later
+                mVerificationId = verificationId;
+                mResendToken = token;
+
+                // [START_EXCLUDE]
+                // SEND USER TO CONFIRMATION PAGE
+                goToConfirmationPage( customer_phone.getText().toString(), mVerificationId, token );
+//                updateUI(STATE_CODE_SENT);
+                // [END_EXCLUDE]
             }
         };
 
@@ -141,10 +166,23 @@ public class CustomerLoginActivity  extends AppCompatActivity implements View.On
         if (TextUtils.isEmpty(phoneNumber)) {
             customer_phone.setError("Invalid phone number.");
             customer_phone.setTextColor(Color.parseColor("#ff1744"));
+            Log.e(TAG, "validatePhoneNumber: empty"  );
             return false;
         }
 
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_VERIFY_IN_PROGRESS, mVerificationInProgress);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mVerificationInProgress = savedInstanceState.getBoolean(KEY_VERIFY_IN_PROGRESS);
     }
 
 //    enabling and disabling views to make sure requests are not sent out unwanted
@@ -161,9 +199,11 @@ public class CustomerLoginActivity  extends AppCompatActivity implements View.On
     }
 
 //    goto confirmation page
-    private void goToConfirmationPage(int phone_number){
-        Intent login_activity_intent = new Intent(this, CustomerLoginActivity.class);
+    private void goToConfirmationPage(String phone_number, String mVerificationId, PhoneAuthProvider.ForceResendingToken mResendToken){
+        Intent login_activity_intent = new Intent(this, CustomerNumberVerificationActivity.class);
         login_activity_intent.putExtra("PHONE_NUMBER", phone_number);
+        login_activity_intent.putExtra("VERIFICATION_ID", mVerificationId);
+        login_activity_intent.putExtra("SERIALIZED_RESEND_TOKEN", mResendToken);
         startActivity(login_activity_intent);
         finish();
     }
@@ -175,13 +215,13 @@ public class CustomerLoginActivity  extends AppCompatActivity implements View.On
     public void onClick(View v) {
 
         switch (v.getId()){
-            case R.id.welcome_call_button:
+            case R.id.login_call_button:
 //                handle call intent here
                 Intent call_intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "+252616651266"));
                 startActivity(call_intent);
                 return;
 
-            case R.id.welcome_login_button:
+            case R.id.login_login_button:
                 if (!validatePhoneNumber()) {
                     return;
                 }
@@ -190,12 +230,12 @@ public class CustomerLoginActivity  extends AppCompatActivity implements View.On
                 InputMethodManager inputManager = (InputMethodManager)
                         getSystemService(Context.INPUT_METHOD_SERVICE);
 
-                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                inputManager.hideSoftInputFromWindow(customer_phone.getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
                 /////////hide keyboard end
 
 
-                //mStatusText.setText("Authenticating....!");
+                mStatusText.setText("Verifying your number....!");
                 startPhoneNumberVerification(customer_phone.getText().toString());
                 disableViews(login_button);
         }

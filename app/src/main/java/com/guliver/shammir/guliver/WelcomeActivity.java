@@ -41,7 +41,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.welcome_login_button:
                 Intent login_activity_intent = new Intent(this, CustomerLoginActivity.class);
                 startActivity(login_activity_intent);
-                finish();
                 break;
         }
 
