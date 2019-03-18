@@ -129,7 +129,7 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
                 verifyVerificationCode(mCode);
             }
             // Update the UI and attempt sign in with the phone credential
-            // updateUI(STATE_VERIFY_SUCCESS, credential);
+             updateUI(STATE_VERIFY_SUCCESS, credential);
             // [END_EXCLUDE]
             signInWithPhoneAuthCredential(credential);
         }
@@ -152,9 +152,7 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
             }
 
             // Show a message and update the UI
-            // [START_EXCLUDE]
-            updateUI(STATE_VERIFY_FAILED);
-            // [END_EXCLUDE]
+
         }
 
         @Override
@@ -295,6 +293,10 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
         } else {
             updateUI(STATE_INITIALIZED);
         }
+    }
+
+    private void updateUI(int uiState, PhoneAuthCredential cred) {
+        updateUI(uiState, null, cred);
     }
 
     private void updateUI(int uiState, FirebaseUser user) {
