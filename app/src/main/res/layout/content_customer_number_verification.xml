@@ -46,18 +46,18 @@
         android:layout_height="67dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="84dp"
+        android:contentDescription="TODO"
         app:layout_constraintBottom_toTopOf="@+id/confirmation_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confirmation_status"
-        app:layout_constraintVertical_bias="0.035"
-        app:srcCompat="@drawable/ic_powerd_by_premier"
-        android:contentDescription="TODO" />
+        app:layout_constraintTop_toBottomOf="@+id/customer_verification_edit_text"
+        app:layout_constraintVertical_bias="0.72"
+        app:srcCompat="@drawable/ic_powerd_by_premier" />
 
     <Button
         android:id="@+id/confirmation_button"
@@ -121,18 +121,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4"
         app:layout_constraintVertical_bias="0.046" />
-
-    <TextView
-        android:id="@+id/confirmation_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/confirmation_log_in"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/customer_verification_edit_text"
-        app:layout_constraintVertical_bias="0.065" />
 
 </android.support.constraint.ConstraintLayout>
