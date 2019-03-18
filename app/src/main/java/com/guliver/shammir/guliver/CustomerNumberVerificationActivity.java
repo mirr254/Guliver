@@ -1,22 +1,15 @@
 package com.guliver.shammir.guliver;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -37,7 +30,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
 import java.util.concurrent.TimeUnit;
 
@@ -62,14 +54,8 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
 
     private boolean mVerificationInProgress = false;
     private String mVerificationId;
-    private String mPhoneNumber;
+    private String mPhoneNumber, mCode;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
-
-    private ViewGroup mPhoneNumberViews;
-    private ViewGroup mSignedInViews;
-
-    private TextView mStatusText;
 
     private EditText mVerificationField;
 
@@ -92,12 +78,13 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
 //        collect data from intent
         Intent verificationIntent = getIntent();
         mPhoneNumber = verificationIntent.getStringExtra("PHONE_NUMBER");
-        mVerificationId = verificationIntent.getStringExtra("VERIFICATION_ID");
+
+        startPhoneNumberVerification( mPhoneNumber );
+
         mResendToken = (PhoneAuthProvider.ForceResendingToken) verificationIntent.getSerializableExtra("SERIALIZED_RESEND_TOKEN");
 
         progressBar = (ProgressBar) findViewById(R.id.customer_number_progress_bar);
-
-        mStatusText = (TextView) findViewById(R.id.confirmation_status);
+        progressBar.setVisibility(View.INVISIBLE);
 
 
         mVerificationField = (EditText) findViewById(R.id.customer_verification_edit_text);
@@ -114,56 +101,71 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
 
-        // Initialize phone auth callbacks
-        // [START phone_auth_callbacks]
-        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
-            @Override
-            public void onVerificationCompleted(PhoneAuthCredential credential) {
-                // This callback will be invoked in two situations:
-                // 1 - Instant verification. In some cases the phone number can be instantly
-                //     verified without needing to send or enter a verification code.
-                // 2 - Auto-retrieval. On some devices Google Play services can automatically
-                //     detect the incoming verification SMS and perform verificaiton without
-                //     user action.
-                Log.d(TAG, "onVerificationCompleted:" + credential);
-                // [START_EXCLUDE silent]
-                mVerificationInProgress = false;
-                // [END_EXCLUDE]
-
-                // [START_EXCLUDE silent]
-                // Update the UI and attempt sign in with the phone credential
-               // updateUI(STATE_VERIFY_SUCCESS, credential);
-                // [END_EXCLUDE]
-                signInWithPhoneAuthCredential(credential);
-            }
-
-            @Override
-            public void onVerificationFailed(FirebaseException e) {
-                // This callback is invoked in an invalid request for verification is made,
-                // for instance if the the phone number format is not valid.
-                Log.e(TAG, "onVerificationFailed:  "+e.getMessage(), e);
-                // [START_EXCLUDE silent]
-                mVerificationInProgress = false;
-                // [END_EXCLUDE]
-
-               if (e instanceof FirebaseTooManyRequestsException) {
-                    // The SMS quota for the project has been exceeded
-                    // [START_EXCLUDE]
-                    Snackbar.make(findViewById(android.R.id.content), "Quota exceeded.",
-                            Snackbar.LENGTH_SHORT).show();
-                    // [END_EXCLUDE]
-                 }
-
-                // Show a message and update the UI
-                // [START_EXCLUDE]
-                updateUI(STATE_VERIFY_FAILED);
-                // [END_EXCLUDE]
-            }
-
-        };
-        // [END phone_auth_callbacks]
     }
+    // Initialize phone auth callbacks
+    // [START phone_auth_callbacks]
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+        @Override
+        public void onVerificationCompleted(PhoneAuthCredential credential) {
+            // This callback will be invoked in two situations:
+            // 1 - Instant verification. In some cases the phone number can be instantly
+            //     verified without needing to send or enter a verification mCode.
+            // 2 - Auto-retrieval. On some devices Google Play services can automatically
+            //     detect the incoming verification SMS and perform verificaiton without
+            //     user action.
+            Log.e(TAG, "onVerificationCompleted: Code =" + credential.getSmsCode());
+            // [START_EXCLUDE silent]
+            mVerificationInProgress = false;
+            // [END_EXCLUDE]
+
+            // [START_EXCLUDE silent]
+            mCode = credential.getSmsCode();
+            if ( mCode != null){
+                mVerificationField.setText(mCode);
+
+                //verify the mCode
+                verifyVerificationCode(mCode);
+            }
+            // Update the UI and attempt sign in with the phone credential
+             updateUI(STATE_VERIFY_SUCCESS, credential);
+            // [END_EXCLUDE]
+            signInWithPhoneAuthCredential(credential);
+        }
+
+        @Override
+        public void onVerificationFailed(FirebaseException e) {
+            // This callback is invoked in an invalid request for verification is made,
+            // for instance if the the phone number format is not valid.
+            Log.e(TAG, "onVerificationFailed:  "+e.getMessage(), e);
+            // [START_EXCLUDE silent]
+            mVerificationInProgress = false;
+            // [END_EXCLUDE]
+
+            if (e instanceof FirebaseTooManyRequestsException) {
+                // The SMS quota for the project has been exceeded
+                // [START_EXCLUDE]
+                Snackbar.make(findViewById(android.R.id.content), "Quota exceeded.",
+                        Snackbar.LENGTH_SHORT).show();
+                // [END_EXCLUDE]
+            }
+
+            // Show a message and update the UI
+
+        }
+
+        @Override
+        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+            super.onCodeSent(s, forceResendingToken);
+
+            //storing the verification id that is sent to the user
+            Log.i(TAG, "Code sent: "+s);
+            mVerificationId = s;
+        }
+
+    };
+    // [END phone_auth_callbacks]
 
     // [START on_start_check_user]
     @Override
@@ -205,12 +207,11 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
         // [END start_phone_auth]
 
         mVerificationInProgress = true;
-        mStatusText.setVisibility(View.INVISIBLE);
     }
 
-    private void verifyPhoneNumberWithCode(String verificationId, String code) {
+    private void verifyVerificationCode(String code) {
         // [START verify_with_code]
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential( mVerificationId, code);
         // [END verify_with_code]
         signInWithPhoneAuthCredential(credential);
     }
@@ -248,6 +249,7 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
                                     Log.e(TAG, "Registration Phone "+ dataSnapshot.getValue());
                                     if (dataSnapshot.getValue() != mPhoneNumber){
                                         current_user_db.setValue(mPhoneNumber);
+
                                     }
                                 }
 
@@ -255,6 +257,7 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
                                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                                 }
+
                             });
 
                             FirebaseUser user = task.getResult().getUser();
@@ -265,9 +268,9 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
                             // Sign in failed, display a message and update the UI
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                // The verification code entered was invalid
+                                // The verification mCode entered was invalid
                                 // [START_EXCLUDE silent]
-                                mVerificationField.setError("Invalid code.");
+                                mVerificationField.setError("Invalid mCode.");
                                 // [END_EXCLUDE]
                             }
                             // [START_EXCLUDE silent]
@@ -279,7 +282,6 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
                 });
     }
     // [END sign_in_with_phone]
-
 
     private void updateUI(int uiState) {
         updateUI(uiState, mAuth.getCurrentUser(), null);
@@ -293,30 +295,30 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
         }
     }
 
-    private void updateUI(int uiState, FirebaseUser user) {
-        updateUI(uiState, user, null);
-    }
-
     private void updateUI(int uiState, PhoneAuthCredential cred) {
         updateUI(uiState, null, cred);
     }
 
+    private void updateUI(int uiState, FirebaseUser user) {
+        updateUI(uiState, user, null);
+    }
+
+
     private void updateUI(int uiState, FirebaseUser user, PhoneAuthCredential cred) {
         switch (uiState) {
+            case STATE_INITIALIZED:
+                progressBar.setVisibility( View.VISIBLE);
             case STATE_VERIFY_FAILED:
                 // Verification has failed, show all options
                 enableViews( mVerifyButton, mResendButton,
                         mVerificationField);
-                mStatusText.setText(R.string.status_verification_failed);
-                mStatusText.setTextColor(Color.parseColor("#dd2c00"));
+                mVerificationField.setError(" Verification failed");
                 progressBar.setVisibility(View.INVISIBLE);
                 break;
             case STATE_VERIFY_SUCCESS:
                 // Verification has succeeded, proceed to firebase sign in
                 disableViews( mVerifyButton, mResendButton,
                         mVerificationField);
-                mStatusText.setText("Verfication Sucessfull");
-                mStatusText.setTextColor(Color.parseColor("#43a047"));
                 progressBar.setVisibility(View.INVISIBLE);
 
                 // Set the verification text based on the credential
@@ -332,13 +334,10 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
                 break;
             case STATE_SIGNIN_FAILED:
                 // No-op, handled by sign-in check
-                mStatusText.setText(R.string.status_sign_in_failed);
-                mStatusText.setTextColor(Color.parseColor("#dd2c00"));
                 progressBar.setVisibility(View.INVISIBLE);
                 break;
             case STATE_SIGNIN_SUCCESS:
                 // Np-op, handled by sign-in check
-                mStatusText.setText(R.string.signed_in);
                 break;
         }
 
@@ -374,16 +373,19 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.button_verify_phone:
+            case R.id.confirmation_button:
                 String code = mVerificationField.getText().toString();
                 if (TextUtils.isEmpty(code)) {
                     mVerificationField.setError("Cannot be empty.");
                     return;
                 }
 
-                verifyPhoneNumberWithCode(mVerificationId, code);
+                verifyVerificationCode( code );
+
+                updateUI(STATE_INITIALIZED);
                 break;
-            case R.id.button_resend:
+            case R.id.resend_button:
+                updateUI(STATE_INITIALIZED);
                 resendVerificationCode(mPhoneNumber, mResendToken);
                 break;
 
