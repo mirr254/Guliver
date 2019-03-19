@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.guliver.shammir.guliver">
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -21,6 +26,14 @@
         android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".DriverLoginActivity"
+            android:label="@string/title_activity_driver_login"
+            android:parentActivityName=".WelcomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.guliver.shammir.guliver.WelcomeActivity" />
+        </activity>
+        <activity
             android:name=".CustomerNumberVerificationActivity"
             android:label="@string/title_activity_customer_number_verification"
             android:parentActivityName=".CustomerLoginActivity"
@@ -30,8 +43,8 @@
                 android:value="com.guliver.shammir.guliver.CustomerLoginActivity" />
         </activity>
         <activity
-            android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar"
-            android:name=".WelcomeActivity" />
+            android:name=".WelcomeActivity"
+            android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -54,12 +67,13 @@
         <activity
             android:name=".DriverMapsActivity"
             android:label="@string/title_activity_driver_maps" />
-        <activity android:name=".DriverLoginActivity" />
+        <activity android:name=".DriverLoginActivityOld" />
         <activity android:name=".DriverSettingsActivity" />
         <activity android:name=".HistoryActivity" />
         <activity android:name=".CustomerSettingsActivity" />
-        <activity android:name=".CustomerLoginActivity"
-            android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar"/>
+        <activity
+            android:name=".CustomerLoginActivity"
+            android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar" />
         <activity android:name=".MainActivity" />
 
         <service

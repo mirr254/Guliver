@@ -13,10 +13,13 @@ import android.os.Looper;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -101,6 +104,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private String TAG = "CustomerMapActivity";
 
     private RatingBar mRatingBar;
+//    drawer
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+    private NavigationView nv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +116,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -125,11 +134,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
 
-
-        mLogout = (Button) findViewById(R.id.logout);
+//        mSettings = (Button) findViewById(R.id.settings);
+//        mLogout = (Button) findViewById(R.id.logout);
+//        mHistory = (Button) findViewById(R.id.history);
         mRequest = (Button) findViewById(R.id.request);
-        mSettings = (Button) findViewById(R.id.settings);
-        mHistory = (Button) findViewById(R.id.history);
+
         mCallOffice = (Button) findViewById(R.id.customer_map_call_office);
 
         mCallOffice.setOnClickListener(new View.OnClickListener() {
@@ -141,16 +150,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
-        mLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(CustomerMapActivity.this, CustomerLoginActivity.class);
-                startActivity(intent);
-                finish();
-                return;
-            }
-        });
+//        mLogout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FirebaseAuth.getInstance().signOut();
+//                Intent intent = new Intent(CustomerMapActivity.this, CustomerLoginActivity.class);
+//                startActivity(intent);
+//                finish();
+//                return;
+//            }
+//        });
 
         mRequest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,30 +187,30 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                     pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
 
-                    mRequest.setText("Getting your Driver....");
+                    mRequest.setText("Locating Driver....");
 
                     getClosestDriver();
                 }
             }
         });
-        mSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CustomerMapActivity.this, CustomerSettingsActivity.class);
-                startActivity(intent);
-                return;
-            }
-        });
-
-        mHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CustomerMapActivity.this, HistoryActivity.class);
-                intent.putExtra("customerOrDriver", "Customers");
-                startActivity(intent);
-                return;
-            }
-        });
+//        mSettings.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(CustomerMapActivity.this, CustomerSettingsActivity.class);
+//                startActivity(intent);
+//                return;
+//            }
+//        });
+//
+//        mHistory.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(CustomerMapActivity.this, HistoryActivity.class);
+//                intent.putExtra("customerOrDriver", "Customers");
+//                startActivity(intent);
+//                return;
+//            }
+//        });
 
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
@@ -263,7 +272,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     getDriverLocation();
                                     getDriverInfo();
                                     getHasRideEnded();
-                                    mRequest.setText("Looking for Driver Location....");
+                                    mRequest.setText("Locating Driver");
 
                             }
                         }

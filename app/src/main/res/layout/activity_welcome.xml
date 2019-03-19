@@ -55,7 +55,7 @@
 
     <Button
         android:id="@+id/welcome_login_button"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
+        style="@style/AppTheme.RoundedCornerMaterialButton"
         android:layout_width="141dp"
         android:layout_height="63dp"
         android:layout_marginStart="8dp"
