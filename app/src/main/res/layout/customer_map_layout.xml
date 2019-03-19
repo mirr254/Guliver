@@ -31,7 +31,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="24dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/customer_map_call_office"
+            app:layout_constraintBottom_toTopOf="@+id/welcome_call_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.555"
             app:layout_constraintStart_toStartOf="parent">
@@ -81,7 +81,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/customer_map_call_office"
+            android:id="@+id/welcome_call_button"
             android:layout_width="159dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

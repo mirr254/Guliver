@@ -43,8 +43,7 @@
                 android:value="com.guliver.shammir.guliver.CustomerLoginActivity" />
         </activity>
         <activity
-            android:name=".WelcomeActivity"
-            android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar" />
+            android:name=".WelcomeActivity"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
