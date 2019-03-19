@@ -17,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -83,15 +84,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private LinearLayout mDriverInfo;
 
-    private ImageView mDriverProfileImage;
+    private ImageView mDriverProfileImage, mDrawerProfileImage;
 
     private TextView mDriverName, mDriverPhone, mDriverCar;
     private String TAG = "CustomerMapActivity";
 
     private RatingBar mRatingBar;
 //    drawer
-    private DrawerLayout dl;
-    private ActionBarDrawerToggle t;
+    private DrawerLayout mDrawerLayout;
     private NavigationView nv;
 
     @Override
@@ -102,8 +102,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-
-
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -111,6 +109,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mDriverInfo = (LinearLayout) findViewById(R.id.driverInfo);
 
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerProfileImage = (ImageView) findViewById(R.id.drawer_profile_image);
         mDriverProfileImage = (ImageView) findViewById(R.id.driverProfileImage);
 
         mDriverName = (TextView) findViewById(R.id.driverName);
@@ -125,6 +126,21 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mRequest = (Button) findViewById(R.id.request);
 
         mCallOffice = (Button) findViewById(R.id.welcome_call_button);
+
+        //close the
+        mDrawerLayout.closeDrawer(Gravity.START);
+        mDrawerProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: Image clicked");
+               //open or close drawer
+                if (mDrawerLayout.isDrawerOpen(Gravity.START) ) {
+                    mDrawerLayout.closeDrawer(Gravity.START);
+                } else {
+                    mDrawerLayout.openDrawer(Gravity.START);
+                }
+            }
+        });
 
         mCallOffice.setOnClickListener(new View.OnClickListener() {
             @Override
