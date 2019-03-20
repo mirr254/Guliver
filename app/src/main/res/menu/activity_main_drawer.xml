@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group>
         <item
-            android:id="@+id/menu_map"
+            android:id="@+id/settings_menu"
             android:icon="@android:drawable/ic_dialog_map"
-            android:title="Map" />
+            android:title="@string/settings_menu" />
         <item
-            android:id="@+id/menu_profile"
+            android:id="@+id/history_menu"
             android:icon="@android:drawable/btn_plus"
-            android:title="Profile" />
+            android:title="@string/history_menu" />
     </group>
 
     <group android:id="@+id/group_menu">

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -61,7 +63,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerMapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class CustomerMapActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     private GoogleMap mMap;
     Location mLastLocation;
@@ -93,7 +95,7 @@ public class CustomerMapActivity extends AppCompatActivity implements OnMapReady
     private RatingBar mRatingBar;
 //    drawer
     private DrawerLayout mDrawerLayout;
-    private NavigationView nv;
+    private NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +112,7 @@ public class CustomerMapActivity extends AppCompatActivity implements OnMapReady
 
         mDriverInfo = (LinearLayout) findViewById(R.id.driverInfo);
 
-
+        mNavigationView = ( NavigationView) findViewById(R.id.nav_view);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerProfileImage = (ImageView) findViewById(R.id.drawer_profile_image);
         mDriverProfileImage = (ImageView) findViewById(R.id.driverProfileImage);
@@ -128,6 +130,8 @@ public class CustomerMapActivity extends AppCompatActivity implements OnMapReady
 
         mCallOffice = (Button) findViewById(R.id.welcome_call_button);
 
+        //handle navigation view
+        mNavigationView.setNavigationItemSelectedListener(this);
         //close the
         mDrawerLayout.closeDrawer(Gravity.START);
         mDrawerProfileImage.setOnClickListener(new View.OnClickListener() {
@@ -649,5 +653,14 @@ public class CustomerMapActivity extends AppCompatActivity implements OnMapReady
 
             }
         });
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.settings_menu:
+                Log.e(TAG, "Settings clicked");
+        }
+        return true;
     }
 }

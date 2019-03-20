@@ -121,4 +121,6 @@
         completions."
     </string>
     <string name="nav_header_name">Customer Name</string>
+    <string name="history_menu">History</string>
+    <string name="settings_menu">Settings</string>
 </resources>
