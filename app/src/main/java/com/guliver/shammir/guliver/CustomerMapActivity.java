@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -69,7 +68,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mLogout, mRequest, mSettings, mHistory, mCallOffice;
+    private Button mCallDriver, mRequest, mSettings, mHistory, mCallOffice;
 
     private LatLng pickupLocation;
 
@@ -121,12 +120,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
 
-//        mSettings = (Button) findViewById(R.id.settings);
-//        mLogout = (Button) findViewById(R.id.logout);
-//        mHistory = (Button) findViewById(R.id.history);
         mRequest = (Button) findViewById(R.id.request);
-
         mCallOffice = (Button) findViewById(R.id.welcome_call_button);
+        mCallDriver = (Button) findViewById(R.id.customer_map_call_driver);
 
         //handle navigation view
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -153,17 +149,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 return;
             }
         });
-
-//        mLogout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FirebaseAuth.getInstance().signOut();
-//                Intent intent = new Intent(CustomerMapActivity.this, CustomerLoginActivity.class);
-//                startActivity(intent);
-//                finish();
-//                return;
-//            }
-//        });
 
         mRequest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,24 +182,6 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 }
             }
         });
-//        mSettings.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(CustomerMapActivity.this, CustomerSettingsActivity.class);
-//                startActivity(intent);
-//                return;
-//            }
-//        });
-//
-//        mHistory.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(CustomerMapActivity.this, HistoryActivity.class);
-//                intent.putExtra("customerOrDriver", "Customers");
-//                startActivity(intent);
-//                return;
-//            }
-//        });
 
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
@@ -312,6 +279,19 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
     }
+
+    //change visibility of views
+    private void changeViewsVisibilityWhenOrderingRide(){
+        mDriverInfo.setVisibility(View.VISIBLE);
+        mRequest.setVisibility(View.GONE);
+        mCallOffice.setVisibility(View.GONE);
+    }
+    private void changeViewsVisibilityWhenRideIsFinishedOrCanceled(){
+        mDriverInfo.setVisibility(View.GONE);
+        mRequest.setVisibility(View.VISIBLE);
+        mCallOffice.setVisibility(View.VISIBLE);
+    }
+
     /*-------------------------------------------- Map specific functions -----
     |  Function(s) getDriverLocation
     |
@@ -386,7 +366,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     |
     *-------------------------------------------------------------------*/
     private void getDriverInfo(){
-        mDriverInfo.setVisibility(View.VISIBLE);
+        changeViewsVisibilityWhenOrderingRide();
+//        mDriverInfo.setVisibility(View.VISIBLE);
         DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID);
 
         mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -400,7 +381,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     if(dataSnapshot.child("phone").getValue() !=null){
                         final String phoneNum = dataSnapshot.child("phone").getValue().toString();
                         mDriverPhone.setText( phoneNum );
-                        mDriverPhone.setOnClickListener(new View.OnClickListener() {
+                        mCallDriver.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+ phoneNum));
@@ -487,7 +468,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         }
         mRequest.setText("Request Ride");
 
-        mDriverInfo.setVisibility(View.GONE);
+        //change views
+        changeViewsVisibilityWhenRideIsFinishedOrCanceled();
+
+//        mDriverInfo.setVisibility(View.GONE);
         mDriverName.setText("");
         mDriverPhone.setText("");
         mDriverCar.setText("Destination: --");
@@ -668,11 +652,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 startActivity(intent);
                 finish();
                 break;
-            case R.id.history_menu:
-                //got to ride history
-                Intent historyIntent = new Intent( this, CustomerHistoryActivity.class);
-                startActivity(historyIntent);
-                break;
+//            case R.id.history_menu:
+//                //got to ride history
+//                Intent historyIntent = new Intent( this, HistoryActivity.class);
+//                startActivity(historyIntent);
+//                break;
 
         }
         return true;

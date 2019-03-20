@@ -93,11 +93,11 @@
                 </LinearLayout>
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/customer_map_call_driver"
                     android:layout_width="wrap_content"
                     android:layout_gravity="center"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/button_login_rounded"
+                    android:background="@drawable/button_call_driver_rounded"
                     app:backgroundTint="@color/login_button_color"
                     android:text="@string/customer_map_call_driver_btn" />
 

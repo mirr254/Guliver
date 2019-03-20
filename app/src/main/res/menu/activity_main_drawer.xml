@@ -5,10 +5,10 @@
             android:id="@+id/settings_menu"
             android:icon="@android:drawable/ic_dialog_map"
             android:title="@string/settings_menu" />
-        <item
-            android:id="@+id/history_menu"
-            android:icon="@android:drawable/btn_plus"
-            android:title="@string/history_menu" />
+        <!--<item-->
+            <!--android:id="@+id/history_menu"-->
+            <!--android:icon="@android:drawable/btn_plus"-->
+            <!--android:title="@string/history_menu" />-->
     </group>
 
     <group android:id="@+id/group_menu">

@@ -172,7 +172,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         mHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DriverMapsActivity.this, CustomerHistoryActivity.class);
+                Intent intent = new Intent(DriverMapsActivity.this, HistoryActivity.class);
                 intent.putExtra("customerOrDriver", "Drivers");
                 startActivity(intent);
                 return;

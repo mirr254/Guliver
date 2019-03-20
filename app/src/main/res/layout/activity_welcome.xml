@@ -55,12 +55,13 @@
 
     <Button
         android:id="@+id/welcome_login_button"
+        style="@style/AppTheme.RoundedCornerMaterialButton"
         android:layout_width="136dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
         android:layout_marginLeft="80dp"
         android:layout_marginBottom="88dp"
-        android:background="@drawable/button_login_rounded"
+        app:background="@drawable/button_login_rounded"
         android:text="Login"
         app:backgroundTint="@color/login_button_color"
         app:layout_constraintBottom_toBottomOf="parent"

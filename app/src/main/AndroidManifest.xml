@@ -37,7 +37,7 @@
             android:name=".CustomerNumberVerificationActivity"
             android:label="@string/title_activity_customer_number_verification"
             android:parentActivityName=".CustomerLoginActivity"
-            android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar">
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.guliver.shammir.guliver.CustomerLoginActivity" />
@@ -68,11 +68,11 @@
             android:label="@string/title_activity_driver_maps" />
         <activity android:name=".DriverLoginActivityOld" />
         <activity android:name=".DriverSettingsActivity" />
-        <activity android:name=".CustomerHistoryActivity" />
+        <activity android:name=".HistoryActivity" />
         <activity android:name=".CustomerSettingsActivity" />
         <activity
             android:name=".CustomerLoginActivity"
-            android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar" />
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
         <activity android:name=".MainActivity" />
 
         <service
