@@ -38,7 +38,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="2dp"
                 android:orientation="vertical"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/welcome_call_button"
@@ -50,8 +50,8 @@
                     android:id="@+id/driverProfileImage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="visible"
                     android:src="@mipmap/ic_default_user"
+                    android:visibility="visible"
                     tools:srcCompat="@mipmap/ic_default_user" />
 
                 <LinearLayout
@@ -88,7 +88,18 @@
                         android:layout_gravity="center"
                         android:numStars="5"
                         android:stepSize="0.1" />
+
+
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_login_rounded"
+                    app:backgroundTint="@color/login_button_color"
+                    android:text="@string/customer_map_call_driver_btn" />
 
             </LinearLayout>
 
@@ -97,7 +108,6 @@
                 android:layout_width="147dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="44dp"
@@ -170,6 +180,7 @@
 
 
     </android.support.constraint.ConstraintLayout>
+
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
