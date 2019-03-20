@@ -6,17 +6,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -63,7 +61,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerMapActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
+public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     private GoogleMap mMap;
     Location mLastLocation;
@@ -659,7 +657,23 @@ public class CustomerMapActivity extends AppCompatActivity implements OnMapReady
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.settings_menu:
-                Log.e(TAG, "Settings clicked");
+                Intent settingsIntent = new Intent(this, CustomerSettingsActivity.class);
+                startActivity( settingsIntent);
+
+                break;
+
+            case R.id.menu_logout:
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(CustomerMapActivity.this, CustomerLoginActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.history_menu:
+                //got to ride history
+                Intent historyIntent = new Intent( this, CustomerHistoryActivity.class);
+                startActivity(historyIntent);
+                break;
+
         }
         return true;
     }

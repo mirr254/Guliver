@@ -3,7 +3,7 @@ package com.guliver.shammir.guliver;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class HistoryActivity extends AppCompatActivity {
+public class CustomerHistoryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
