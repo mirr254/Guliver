@@ -4,8 +4,7 @@
 
     <solid android:color="@color/call_button_color"/>
     <corners
-        android:bottomRightRadius="30dp"
-        android:topRightRadius="30dp"
+        android:radius="40dp"
         />
 
 </shape>

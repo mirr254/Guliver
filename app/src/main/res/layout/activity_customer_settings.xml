@@ -1,42 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.guliver.shammir.guliver.CustomerSettingsActivity"
     android:orientation="vertical"
+    android:background="@color/colorPrimaryDark"
     android:padding="20sp">
     <ImageView
-        android:layout_width="100sp"
-        android:layout_height="100sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/profileImage"
         android:src="@mipmap/ic_default_user"
         android:layout_marginBottom="20sp"/>
     <EditText
         android:id="@+id/name"
         android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileImage"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:hint="Name"
+        android:layout_marginTop="20sp"
+        android:gravity="center"
+        android:background="@drawable/edit_text_settings_rounded"
+        android:hint="@string/settings_name_field"
         android:layout_marginBottom="20sp"/>
     <EditText
         android:id="@+id/phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:hint="Phone"
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        android:layout_marginTop="20sp"
+        android:background="@drawable/edit_text_settings_rounded"
+        android:gravity="center"
+        android:hint="@string/settings_phone_number_field"
         android:layout_marginBottom="20sp"
-        android:inputType="number"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/confirm"
-        android:text="confirm"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/back"
-        android:text="back"/>
+        android:inputType="phone"/>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="@string/settings_confirm"
+        android:backgroundTint="@color/call_button_color"
+        android:background="@drawable/button_call_rounded"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/back" />
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="116dp"
+        android:layout_marginRight="116dp"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="@color/login_button_color"
+        android:text="back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="145dp"
+        android:layout_height="129dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="116dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.417"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phone"
+        app:srcCompat="@drawable/ic_powerd_by_premier" />
+
+</android.support.constraint.ConstraintLayout>

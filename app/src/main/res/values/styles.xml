@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textAppearanceButton">@style/TextAppearance.AppCompat.Button.Custom</item>
+        <item name="android:background">@style/AppTheme.RoundedCornerMaterialButton</item>
     </style>
 
     <style name="TextAppearance.AppCompat.Button.Custom">
@@ -83,5 +84,10 @@
     <style name="AppTheme.RoundedCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/button_call_rounded</item>
     </style>
+
+    <style name="AppTheme.RoundedCornerCallDriverButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/button_call_driver_rounded</item>
+    </style>
+
 
 </resources>
