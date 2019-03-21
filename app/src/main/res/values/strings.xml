@@ -125,4 +125,6 @@
     <string name="settings_menu">Settings</string>
     <string name="settings_confirm">Confirm</string>
     <string name="customer_map_call_driver_btn">Call Driver</string>
+    <string name="settings_phone_number_field">Your Phone Number</string>
+    <string name="settings_name_field">Name</string>
 </resources>

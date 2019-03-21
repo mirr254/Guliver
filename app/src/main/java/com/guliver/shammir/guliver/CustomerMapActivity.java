@@ -68,6 +68,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private FusedLocationProviderClient mFusedLocationClient;
 
+    private DatabaseReference mCustomerDatabase;
+    private FirebaseAuth mAuth;
+
     private Button mCallDriver, mRequest, mSettings, mHistory, mCallOffice;
 
     private LatLng pickupLocation;
@@ -84,15 +87,21 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private LinearLayout mDriverInfo;
 
-    private ImageView mDriverProfileImage, mDrawerProfileImage;
+    private ImageView mCustomerProfileImage, mDrawerProfileImage, mNavHeaderProfileImage;
 
-    private TextView mDriverName, mDriverPhone, mDriverCar;
+    private TextView mDriverName, mDriverPhone, mDriverCar, mNavHeaderCustomerName;
     private String TAG = "CustomerMapActivity";
 
     private RatingBar mRatingBar;
 //    drawer
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
+
+    //user details
+    private String userID;
+    private String mName;
+    private String mPhone;
+    private String mProfileImageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,18 +114,25 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        mAuth = FirebaseAuth.getInstance();
+        userID = mAuth.getCurrentUser().getUid();
+        mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(userID);
+
         destinationLatLng = new LatLng(0.0,0.0);
 
         mDriverInfo = (LinearLayout) findViewById(R.id.driverInfo);
 
         mNavigationView = ( NavigationView) findViewById(R.id.nav_view);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         mDrawerProfileImage = (ImageView) findViewById(R.id.drawer_profile_image);
-        mDriverProfileImage = (ImageView) findViewById(R.id.driverProfileImage);
+        mCustomerProfileImage = (ImageView) findViewById(R.id.customerProfileImage);
+        mNavHeaderProfileImage = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.nav_header_imageView);
 
         mDriverName = (TextView) findViewById(R.id.driverName);
         mDriverPhone = (TextView) findViewById(R.id.driverPhone);
         mDriverCar = (TextView) findViewById(R.id.driverCar);
+        mNavHeaderCustomerName = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.nav_header_textView);
 
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
 
@@ -126,6 +142,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         //handle navigation view
         mNavigationView.setNavigationItemSelectedListener(this);
+
         //close the
         mDrawerLayout.closeDrawer(Gravity.START);
         mDrawerProfileImage.setOnClickListener(new View.OnClickListener() {
@@ -200,7 +217,39 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         });
 
 
+        getUserInfor();
     }
+
+    private void getUserInfor() {
+        mCustomerDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if(map.get("name")!=null){
+                        mName = map.get("name").toString();
+                        mNavHeaderCustomerName.setText(mName);
+                    }
+//                    if(map.get("phone")!=null){
+//                        mPhone = map.get("phone").toString();
+//                        mPhoneField.setText(mPhone);
+//                    }
+                    if(map.get("profileImageUrl")!=null){
+                        mProfileImageUrl = map.get("profileImageUrl").toString();
+                        Glide.with(getApplication()).load(mProfileImageUrl).into(mCustomerProfileImage);
+                        Glide.with(getApplication()).load(mProfileImageUrl).into(mDrawerProfileImage);
+                        Glide.with(getApplication()).load(mProfileImageUrl).into(mNavHeaderProfileImage);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private int radius = 1;
     private Boolean driverFound = false;
     private String driverFoundID;
@@ -393,7 +442,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         mDriverCar.setText(dataSnapshot.child("car").getValue().toString());
                     }
                     if(dataSnapshot.child("profileImageUrl").getValue()!=null){
-                        Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mDriverProfileImage);
+                        Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mCustomerProfileImage);
                     }
 
                     int ratingSum = 0;
@@ -475,7 +524,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverName.setText("");
         mDriverPhone.setText("");
         mDriverCar.setText("Destination: --");
-        mDriverProfileImage.setImageResource(R.mipmap.ic_default_user);
+        mCustomerProfileImage.setImageResource(R.mipmap.ic_default_user);
     }
 
     /*-------------------------------------------- Map specific functions -----

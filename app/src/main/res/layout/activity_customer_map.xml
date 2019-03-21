@@ -47,7 +47,7 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <ImageView
-                    android:id="@+id/driverProfileImage"
+                    android:id="@+id/customerProfileImage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:src="@mipmap/ic_default_user"
