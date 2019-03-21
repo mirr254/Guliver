@@ -101,30 +101,6 @@ public class CustomerLoginActivity  extends AppCompatActivity implements View.On
         return true;
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_VERIFY_IN_PROGRESS, mVerificationInProgress);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mVerificationInProgress = savedInstanceState.getBoolean(KEY_VERIFY_IN_PROGRESS);
-    }
-
-//    enabling and disabling views to make sure requests are not sent out unwanted
-    private void enableViews(View... views) {
-        for (View v : views) {
-            v.setEnabled(true);
-        }
-    }
-
-    private void disableViews(View... views) {
-        for (View v : views) {
-            v.setEnabled(false);
-        }
-    }
 
 //    goto confirmation page
     private void goToConfirmationPage(String phone_number){
