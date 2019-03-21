@@ -692,7 +692,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             case R.id.settings_menu:
                 Intent settingsIntent = new Intent(this, CustomerSettingsActivity.class);
                 startActivity( settingsIntent);
-
+                mDrawerLayout.closeDrawer(Gravity.START);
                 break;
 
             case R.id.menu_logout:
@@ -700,6 +700,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 Intent intent = new Intent(CustomerMapActivity.this, CustomerLoginActivity.class);
                 startActivity(intent);
                 finish();
+                mDrawerLayout.closeDrawer(Gravity.START);
                 break;
 //            case R.id.history_menu:
 //                //got to ride history
