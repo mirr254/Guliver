@@ -127,4 +127,8 @@
     <string name="customer_map_call_driver_btn">Call Driver</string>
     <string name="settings_phone_number_field">Your Phone Number</string>
     <string name="settings_name_field">Name</string>
+    <string name="driver_decline_ride">Decline</string>
+    <string name="driver_accept_ride">Accept</string>
+    <string name="customer_destination">Destination</string>
+    <string name="driver_working">Working?</string>
 </resources>
