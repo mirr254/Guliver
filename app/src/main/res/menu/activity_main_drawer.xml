@@ -3,7 +3,7 @@
     <group>
         <item
             android:id="@+id/settings_menu"
-            android:icon="@android:drawable/ic_dialog_map"
+            android:icon="@drawable/ic_account"
             android:title="@string/settings_menu" />
         <!--<item-->
             <!--android:id="@+id/history_menu"-->
@@ -14,7 +14,7 @@
     <group android:id="@+id/group_menu">
         <item
             android:id="@+id/menu_logout"
-            android:icon="@drawable/common_google_signin_btn_icon_light_normal"
+            android:icon="@drawable/ic_logout"
             android:title="Logout" />
     </group>
 

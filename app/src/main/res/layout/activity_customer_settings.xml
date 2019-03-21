@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.guliver.shammir.guliver.CustomerSettingsActivity"
     android:orientation="vertical"
+    android:background="@color/colorPrimaryDark"
     android:padding="20sp">
     <ImageView
         android:layout_width="match_parent"
@@ -20,7 +21,9 @@
         app:layout_constraintTop_toBottomOf="@+id/profileImage"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_height="wrap_content"
-        android:background="@null"
+        android:layout_marginTop="20sp"
+        android:gravity="center"
+        android:background="@drawable/edit_text_settings_rounded"
         android:hint="@string/settings_name_field"
         android:layout_marginBottom="20sp"/>
     <EditText
@@ -29,7 +32,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/name"
         android:layout_marginTop="20sp"
-        android:background="@null"
+        android:background="@drawable/edit_text_settings_rounded"
+        android:gravity="center"
         android:hint="@string/settings_phone_number_field"
         android:layout_marginBottom="20sp"
         android:inputType="phone"/>
