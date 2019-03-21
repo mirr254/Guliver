@@ -30,6 +30,7 @@
         <activity
             android:name=".DriverLoginActivity"
             android:label="@string/title_activity_driver_login"
+            android:theme="@android:style/Theme.Holo.Light"
             android:parentActivityName=".WelcomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
