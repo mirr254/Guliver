@@ -131,4 +131,7 @@
     <string name="driver_accept_ride">Accept</string>
     <string name="customer_destination">Destination</string>
     <string name="driver_working">Working?</string>
+    <string name="driver_start_ride">Start Ride</string>
+    <string name="driver_call_customer">Call Customer</string>
+    <string name="driver_end_ride">End Ride</string>
 </resources>

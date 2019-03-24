@@ -159,7 +159,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         mDrawerProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: Image clicked");
+
                 //open or close drawer
                 if (mDrawerLayout.isDrawerOpen(Gravity.START) ) {
                     mDrawerLayout.closeDrawer(Gravity.START);
