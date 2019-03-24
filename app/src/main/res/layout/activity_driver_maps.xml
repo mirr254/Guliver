@@ -158,7 +158,7 @@
                         android:id="@+id/driver_end_ride"
                         android:layout_width="200sp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/button_driver_decline_ride_rounded"
+                        android:background="@drawable/button_call_driver_rounded"
                         android:padding="0dp"
                         android:text="@string/driver_end_ride"
                         app:backgroundTint="@android:color/holo_red_dark" />
