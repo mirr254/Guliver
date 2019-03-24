@@ -153,6 +153,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         mCallCustomer.setOnClickListener(this);
         mAcceptRide.setOnClickListener(this);
         mDeclineRide.setOnClickListener(this);
+        mEndRide.setOnClickListener(this);
 
         //close the
         mDrawerLayout.closeDrawer(Gravity.START);
@@ -183,7 +184,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         });
 
 
-//        mRideStatus.setOnClickListener(new View.OnClickListener() {
+//        mEndRide.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 //                switch(status){

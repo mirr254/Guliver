@@ -166,6 +166,18 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 return;
             }
         });
+        mCallDriver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallDriver.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+ mPhone));
+                        startActivity( callIntent);
+                    }
+                });
+            }
+        });
 
         mRequest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,7 +205,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                     pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
 
-                    mRequest.setText("Locating Driver....");
+                    mRequest.setText("Locating Driver");
 
                     getClosestDriver();
                 }
@@ -428,15 +440,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         mDriverName.setText(dataSnapshot.child("name").getValue().toString());
                     }
                     if(dataSnapshot.child("phone").getValue() !=null){
-                        final String phoneNum = dataSnapshot.child("phone").getValue().toString();
-                        mDriverPhone.setText( phoneNum );
-                        mCallDriver.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+ phoneNum));
-                                startActivity( callIntent);
-                            }
-                        });
+                        mPhone = dataSnapshot.child("phone").getValue().toString();
+                        mDriverPhone.setText( mPhone );
                     }
                     if(dataSnapshot.child("car").getValue() !=null){
                         mDriverCar.setText(dataSnapshot.child("car").getValue().toString());
