@@ -8,16 +8,14 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.SwitchCompat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,8 +35,8 @@ import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
@@ -64,22 +62,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCallback, RoutingListener, NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+public class DriverMapsActivity_COPY extends FragmentActivity implements OnMapReadyCallback, RoutingListener{
 
     private GoogleMap mMap;
     Location mLastLocation;
     LocationRequest mLocationRequest;
 
-    String TAG = "DriverMapActivity";
-
     private FusedLocationProviderClient mFusedLocationClient;
-    private DatabaseReference mDriverDatabase;
-    private FirebaseAuth mAuth;
 
 
-    private Button mAcceptRide,mDeclineRide,mCallCustomer,mStartRide,mEndRide;
+    private Button mLogout, mSettings, mRideStatus, mHistory;
 
-    private SwitchCompat mWorkingSwitch;
+    private Switch mWorkingSwitch;
 
     private int status = 0;
 
@@ -91,24 +85,15 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
     private SupportMapFragment mapFragment;
 
-    private LinearLayout mCustomerInfo, mDriverActionAcceptReject, mDriverActionCallStartRide, mDriverActionEndRide;
+    private LinearLayout mCustomerInfo;
 
     private ImageView mCustomerProfileImage;
 
-    private TextView mCustomerName, mCustomerDestination;
+    private TextView mCustomerName, mCustomerPhone, mCustomerDestination;
 
     //    drawer
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-    private ImageView mDrawerProfileImage;
-    private ImageView mNavHeaderProfileImage;
-
-    //user details
-    private String userID;
-    private String mName;
-    private String mCustomerPhoneNumber;
-    private String mProfileImageUrl;
-    private TextView mNavHeaderDriverName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,55 +111,18 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         mNavigationView = ( NavigationView) findViewById(R.id.driver_nav_view);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.driver_drawer_layout);
 
-        mDrawerProfileImage = (ImageView) findViewById(R.id.driver_drawer_profile_image);
-        mCustomerProfileImage = (ImageView) findViewById(R.id.customerProfileImage);
-        mNavHeaderProfileImage = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.nav_header_imageView);
-        mNavHeaderDriverName = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.nav_header_textView);
-
         mCustomerInfo = (LinearLayout) findViewById(R.id.customerInfo);
-        mDriverActionAcceptReject = (LinearLayout)findViewById(R.id.driver_action_accept_reject);
-        mDriverActionCallStartRide = (LinearLayout) findViewById(R.id.driver_action_call_start_ride);
-        mDriverActionEndRide = (LinearLayout) findViewById(R.id.driver_action_end_ride);
 
         mCustomerProfileImage = (ImageView) findViewById(R.id.customerProfileImage);
 
         mCustomerName = (TextView) findViewById(R.id.customerName);
+        mCustomerPhone = (TextView) findViewById(R.id.customerPhone);
         mCustomerDestination = (TextView) findViewById(R.id.customerDestination);
 
-//        buttons
-        mStartRide = (Button) findViewById(R.id.driver_start_ride);
-        mCallCustomer = (Button) findViewById(R.id.driver_call_customer);
-        mDeclineRide = (Button) findViewById(R.id.driver_decline_ride);
-        mAcceptRide = (Button) findViewById(R.id.driver_accept_ride);
-        mEndRide = (Button) findViewById(R.id.driver_end_ride);
-
-//        onclick listeners
-        mStartRide.setOnClickListener(this);
-        mCallCustomer.setOnClickListener(this);
-        mAcceptRide.setOnClickListener(this);
-        mDeclineRide.setOnClickListener(this);
-        mEndRide.setOnClickListener(this);
-
-        //close the
-        mDrawerLayout.closeDrawer(Gravity.START);
-        mDrawerProfileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //open or close drawer
-                if (mDrawerLayout.isDrawerOpen(Gravity.START) ) {
-                    mDrawerLayout.closeDrawer(Gravity.START);
-                } else {
-                    mDrawerLayout.openDrawer(Gravity.START);
-                }
-            }
-        });
-
-        mWorkingSwitch = (SwitchCompat) findViewById(R.id.workingSwitch);
+        mWorkingSwitch = (Switch) findViewById(R.id.workingSwitch);
         mWorkingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mDrawerLayout.closeDrawer(Gravity.START);
                 if (isChecked){
                     connectDriver();
                 }else{
@@ -183,61 +131,63 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
 
-
-//        mEndRide.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                switch(status){
-//                    case 1:
-//                        status=2;
-//                        erasePolylines();
-//                        if(destinationLatLng.latitude!=0.0 && destinationLatLng.longitude!=0.0){
-//                            getRouteToMarker(destinationLatLng);
-//                        }
-//                        mRideStatus.setText("drive completed");
-//
-//                        break;
-//                    case 2:
-//                        recordRide();
-//                        endRide();
-//                        break;
-//                }
-//            }
-//        });
-
-        mAuth = FirebaseAuth.getInstance();
-        userID = mAuth.getCurrentUser().getUid();
-
-        mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userID);
-        getDriverInfor();
-
-        getAssignedCustomer();
-    }
-
-    //get driver infor
-    private void getDriverInfor() {
-        mDriverDatabase.addValueEventListener(new ValueEventListener() {
+        mSettings = (Button) findViewById(R.id.settings);
+        mLogout = (Button) findViewById(R.id.logout);
+        mRideStatus = (Button) findViewById(R.id.rideStatus);
+        mHistory = (Button) findViewById(R.id.history);
+        mRideStatus.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
-                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    if(map.get("name")!=null){
-                        mName = map.get("name").toString();
-                        mNavHeaderDriverName.setText(mName);
-                    }
-                    if(map.get("profileImageUrl")!=null){
-                        mProfileImageUrl = map.get("profileImageUrl").toString();
-                        Glide.with(getApplication()).load(mProfileImageUrl).into(mDrawerProfileImage);
-                        Glide.with(getApplication()).load(mProfileImageUrl).into(mNavHeaderProfileImage);
-                    }
+            public void onClick(View v) {
+                switch(status){
+                    case 1:
+                        status=2;
+                        erasePolylines();
+                        if(destinationLatLng.latitude!=0.0 && destinationLatLng.longitude!=0.0){
+                            getRouteToMarker(destinationLatLng);
+                        }
+                        mRideStatus.setText("drive completed");
+
+                        break;
+                    case 2:
+                        recordRide();
+                        endRide();
+                        break;
                 }
             }
+        });
 
+        mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onClick(View v) {
+                isLoggingOut = true;
 
+                disconnectDriver();
+
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(DriverMapsActivity_COPY.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                return;
             }
         });
+        mSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DriverMapsActivity_COPY.this, DriverSettingsActivity.class);
+                startActivity(intent);
+                return;
+            }
+        });
+        mHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DriverMapsActivity_COPY.this, HistoryActivity.class);
+                intent.putExtra("customerOrDriver", "Drivers");
+                startActivity(intent);
+                return;
+            }
+        });
+        getAssignedCustomer();
     }
 
     private void getAssignedCustomer(){
@@ -353,17 +303,17 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                         mCustomerName.setText(map.get("name").toString());
                     }
                     if(map.get("phone")!=null){
-                        mCustomerPhoneNumber = map.get("phone").toString();
-//                        mCustomerPhone.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                Intent callCustomerIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel: "+mCustomerPhoneNumber));
-//                                startActivity( callCustomerIntent);
-//                            }
-//                        });
+                        final String phoneNum = map.get("phone").toString();
+                        mCustomerPhone.setText(phoneNum);
+                        mCustomerPhone.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent callCustomerIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel: "+phoneNum));
+                                startActivity( callCustomerIntent);
+                            }
+                        });
 
                     }
-//
                     if(map.get("profileImageUrl")!=null){
                         Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mCustomerProfileImage);
                     }
@@ -378,7 +328,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
 
     private void endRide(){
-//        mRideStatus.setText("picked customer");
+        mRideStatus.setText("picked customer");
         erasePolylines();
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -404,7 +354,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         }
         mCustomerInfo.setVisibility(View.GONE);
         mCustomerName.setText("");
-//        mCustomerPhone.setText("");
+        mCustomerPhone.setText("");
         mCustomerDestination.setText("Destination: --");
         mCustomerProfileImage.setImageResource(R.mipmap.ic_default_user);
     }
@@ -447,7 +397,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
 
             }else{
@@ -524,14 +474,14 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                ActivityCompat.requestPermissions(DriverMapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                                ActivityCompat.requestPermissions(DriverMapsActivity_COPY.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                             }
                         })
                         .create()
                         .show();
             }
             else{
-                ActivityCompat.requestPermissions(DriverMapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                ActivityCompat.requestPermissions(DriverMapsActivity_COPY.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
         }
     }
@@ -634,72 +584,4 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         polylines.clear();
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()){
-            case R.id.settings_menu:
-                Intent settingsIntent = new Intent(this, DriverSettingsActivity.class);
-                startActivity( settingsIntent);
-                mDrawerLayout.closeDrawer(Gravity.START);
-                break;
-
-            case R.id.menu_logout:
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(this, DriverLoginActivity.class);
-                startActivity(intent);
-                finish();
-                mDrawerLayout.closeDrawer(Gravity.START);
-                break;
-//            case R.id.history_menu:
-//                //got to ride history
-//                Intent historyIntent = new Intent( this, HistoryActivity.class);
-//                startActivity(historyIntent);
-//                break;
-
-        }
-        return true;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.driver_accept_ride:
-                //driver accepts ride
-                //hide the accept/decline
-                mDriverActionCallStartRide.setVisibility(View.VISIBLE);
-                mDriverActionAcceptReject.setVisibility(View.GONE);
-
-                break;
-            case R.id.driver_decline_ride:
-                //driver decline
-                mCustomerInfo.setVisibility(View.GONE);
-                endRide();
-
-                break;
-            case R.id.driver_call_customer:
-                //call the customer
-                Intent callCustomerIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel: "+mCustomerPhoneNumber));
-                startActivity( callCustomerIntent);
-
-                break;
-            case R.id.driver_start_ride:
-            //start ride
-                //get direction
-                mDriverActionCallStartRide.setVisibility(View.GONE);
-                mDriverActionEndRide.setVisibility(View.VISIBLE);
-                erasePolylines();
-                if(destinationLatLng.latitude!=0.0 && destinationLatLng.longitude!=0.0){
-                    getRouteToMarker(destinationLatLng);
-                }
-
-                break;
-            case R.id.driver_end_ride:
-                mCustomerInfo.setVisibility(View.GONE);
-                endRide();
-                recordRide();
-
-            /////include the end ride button here and record ride
-        }
-
-    }
 }
