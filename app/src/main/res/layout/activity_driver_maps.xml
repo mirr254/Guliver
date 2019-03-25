@@ -69,14 +69,15 @@
                         android:text="@string/customer_destination" />
 
 
-                    <RatingBar
-                        android:id="@+id/ratingBar"
-                        style="?android:attr/ratingBarStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:numStars="5"
-                        android:stepSize="0.1" />
+                    <!--<RatingBar-->
+                        <!--android:id="@+id/ratingBar"-->
+                        <!--style="?android:attr/ratingBarStyleSmall"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:numStars="5"-->
+                        <!--android:stepSize="0.1" -->
+
 
 
                 </LinearLayout>
@@ -227,7 +228,7 @@
         app:headerLayout="@layout/customer_nav_header_main"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/customer_activity_main_drawer" >
+        app:menu="@menu/driver_activity_main_drawer" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -235,6 +236,11 @@
             android:layout_gravity="bottom"
             android:orientation="vertical"
             android:padding="16dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:src="@drawable/ic_powerd_by_premier"
+                android:layout_height="100sp" />
 
             <android.support.v7.widget.SwitchCompat
                 android:layout_width="wrap_content"
