@@ -239,6 +239,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
+                android:layout_margin="20sp"
                 android:src="@drawable/ic_powerd_by_premier"
                 android:layout_height="100sp" />
 
