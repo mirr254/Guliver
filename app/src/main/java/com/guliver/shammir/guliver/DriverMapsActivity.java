@@ -640,11 +640,13 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
+
             case R.id.driver_settings_menu:
                 Intent settingsIntent = new Intent(DriverMapsActivity.this, DriverSettingsActivity.class);
                 startActivity( settingsIntent);
                 mDrawerLayout.closeDrawer(Gravity.START);
                 break;
+
 
             case R.id.driver_menu_logout:
                 FirebaseAuth.getInstance().signOut();
