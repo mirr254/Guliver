@@ -45,7 +45,7 @@ exports.sendEmailToGuliver = functions.database.ref('/customerRequest')
             */
             const mailOptions = {
                 from: '"Gulivery" <guliverdev@gmail.com>',
-                to: 'kungusamuel90@gmail.com'
+                to: 'go@gulivery.so'
                 };
 
                 mailOptions.subject = "Ride request";

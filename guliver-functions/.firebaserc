@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "guliver-b07df"
+    "default": "guliver-b07df",
+    "guliver": "guliver-b07df"
   }
 }
