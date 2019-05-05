@@ -188,6 +188,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/customer_activity_main_drawer" >
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:src="@drawable/ic_powerd_by_premier"
+                android:layout_height="100sp" />
+
+        </LinearLayout>
+
+
 
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

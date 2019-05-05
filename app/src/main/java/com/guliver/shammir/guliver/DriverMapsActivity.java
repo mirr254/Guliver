@@ -148,6 +148,9 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         mAcceptRide = (Button) findViewById(R.id.driver_accept_ride);
         mEndRide = (Button) findViewById(R.id.driver_end_ride);
 
+        //set navigation item listener
+        mNavigationView.setNavigationItemSelectedListener(this);
+
 //        onclick listeners
         mStartRide.setOnClickListener(this);
         mCallCustomer.setOnClickListener(this);
@@ -637,15 +640,17 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
-            case R.id.settings_menu:
-                Intent settingsIntent = new Intent(this, DriverSettingsActivity.class);
+
+            case R.id.driver_settings_menu:
+                Intent settingsIntent = new Intent(DriverMapsActivity.this, DriverSettingsActivity.class);
                 startActivity( settingsIntent);
                 mDrawerLayout.closeDrawer(Gravity.START);
                 break;
 
-            case R.id.menu_logout:
+
+            case R.id.driver_menu_logout:
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(this, DriverLoginActivity.class);
+                Intent intent = new Intent(DriverMapsActivity.this, DriverLoginActivity.class);
                 startActivity(intent);
                 finish();
                 mDrawerLayout.closeDrawer(Gravity.START);

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/driver_settings_menu"
+            android:icon="@drawable/ic_account"
+            android:title="@string/settings_menu" />
+        <!--<item-->
+            <!--android:id="@+id/history_menu"-->
+            <!--android:icon="@android:drawable/btn_plus"-->
+            <!--android:title="@string/history_menu" />-->
+    </group>
+
+    <group android:id="@+id/driver_group_menu">
+        <item
+            android:id="@+id/driver_menu_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="Logout" />
+    </group>
+
+</menu>
