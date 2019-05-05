@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Gulivery</string>
+    <string name="app_name">GO!</string>
     <string name="action_settings">Settings</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
     <string name="label_google_sign_in">Firebase + Google Sign In</string>
@@ -93,7 +93,7 @@
     <!--customer numnber verificatio-->
     <string name="confirmation_string">Confirm</string>
     <string name="todo">image description</string>
-    <string name="number_hint">+254700092923</string>
+    <string name="number_hint">+252610000000</string>
     <string name="confirmation_log_in">Success</string>
     <string name="logo">our logo</string>
     <string name="confirmation_code">Code</string>
@@ -134,4 +134,5 @@
     <string name="driver_start_ride">Start Ride</string>
     <string name="driver_call_customer">Call Customer</string>
     <string name="driver_end_ride">End Ride</string>
+    <string name="call">Call</string>
 </resources>

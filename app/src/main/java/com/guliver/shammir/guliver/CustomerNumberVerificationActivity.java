@@ -149,8 +149,14 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
                     // [END_EXCLUDE]
                 }
 
+                if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                    Snackbar.make(findViewById(android.R.id.content), "Invalid phone number, Format +2608123456",
+                            Snackbar.LENGTH_LONG).show();
+                }
+
                 // Show a message and update the UI
 //                // [START_EXCLUDE]
+                goBack();
                 updateUI(STATE_VERIFY_FAILED);
 //                // [END_EXCLUDE]
 
@@ -177,6 +183,13 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
         startPhoneNumberVerification( mPhoneNumber );
     }
     // Initialize phone auth callbacks
+
+    //intent to go back to login acitivity if code sending fails
+    public void goBack(){
+        Intent goBackIntent = new Intent(CustomerNumberVerificationActivity.this, CustomerLoginActivity.class);
+        startActivity(goBackIntent);
+        finish();
+    }
 
 
     // [START on_start_check_user]

@@ -108,7 +108,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="44dp"
                 android:background="@drawable/button_call_rounded"
-                android:text="Call"
+                android:text="@string/call"
                 app:backgroundTint="@color/call_button_color"
                 app:layout_constraintBottom_toBottomOf="@+id/driver_map"
                 app:layout_constraintEnd_toEndOf="parent"

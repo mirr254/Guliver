@@ -46,7 +46,6 @@ public class CustomerLoginActivity  extends AppCompatActivity implements View.On
 
     private EditText customer_phone;
 
-    private TextView mStatusText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,6 @@ public class CustomerLoginActivity  extends AppCompatActivity implements View.On
 //        edit text
         customer_phone = (EditText) findViewById(R.id.customer_login_phone);
 
-        mStatusText = (TextView) findViewById(R.id.status);
 
 //        handle clicks within the class
         login_button.setOnClickListener(this);
@@ -137,8 +135,6 @@ public class CustomerLoginActivity  extends AppCompatActivity implements View.On
                 String phoneNumber = customer_phone.getText().toString();
 
                 goToConfirmationPage( phoneNumber );
-
-                mStatusText.setText("Verifying your number....!");
 
         }
 
