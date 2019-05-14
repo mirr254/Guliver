@@ -57,7 +57,7 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
 
     private boolean mVerificationInProgress = false;
     private String mVerificationId;
-    private String mPhoneNumber, mCode;
+    private String mPhoneNumber, mCode, rawPhoneNum;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
@@ -81,7 +81,8 @@ public class CustomerNumberVerificationActivity extends AppCompatActivity  imple
 
 //        collect data from intent
         Intent verificationIntent = getIntent();
-        mPhoneNumber = verificationIntent.getStringExtra("PHONE_NUMBER");
+        rawPhoneNum = verificationIntent.getStringExtra("PHONE_NUMBER");
+        mPhoneNumber = "+252"+rawPhoneNum;
 
         progressBar = (ProgressBar) findViewById(R.id.customer_number_progress_bar);
         progressBar.setVisibility(View.INVISIBLE);

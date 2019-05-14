@@ -93,7 +93,7 @@
     <!--customer numnber verificatio-->
     <string name="confirmation_string">Confirm</string>
     <string name="todo">image description</string>
-    <string name="number_hint">+252610000000</string>
+    <string name="number_hint">0610000000</string>
     <string name="confirmation_log_in">Success</string>
     <string name="logo">our logo</string>
     <string name="confirmation_code">Code</string>
